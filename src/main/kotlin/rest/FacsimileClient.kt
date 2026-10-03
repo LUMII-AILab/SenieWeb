@@ -34,7 +34,7 @@ class FacsimileClient(
      */
     fun findUrlFor(book: Book, page: Page): String? {
         // Page numbers in image files may be any of these lengths (zero-padded)
-        val lengths = 1..3
+        val lengths = 1..4
         // Page images may have any of these file extensions
         val extensions = listOf("jpg", "png")
 
