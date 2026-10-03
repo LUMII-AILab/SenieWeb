@@ -83,8 +83,8 @@
     </div>
 
     <div class="page-nav">
-      <nav th:insert="this :: .pages"></nav>
-      <nav th:insert="this :: .books"></nav>
+      <nav th:insert="~{this :: .pages}"></nav>
+      <nav th:insert="~{this :: .books}"></nav>
     </div>
 
   </section>
