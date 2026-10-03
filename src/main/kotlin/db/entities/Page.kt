@@ -2,6 +2,7 @@ package lv.ailab.senie.db.entities
 
 import jakarta.persistence.*
 import jakarta.persistence.FetchType.LAZY
+import lv.ailab.senie.utils.urlEncode
 import java.time.Instant
 
 @Entity
@@ -21,6 +22,9 @@ data class Page(
 
     val linkName: String?
         get() = if (sortOrder == 0 && name == null) "_" else name
+
+    val encodedLinkName: String?
+        get() = linkName?.urlEncode()
 
     val displayName: String?
         get() = if (linkName == "_") "Titullapa" else name
