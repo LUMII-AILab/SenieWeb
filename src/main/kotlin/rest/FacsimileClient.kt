@@ -50,14 +50,13 @@ class FacsimileClient(
         return permutations.firstNotNullOfOrNull { (length, extension) ->
             val fileName = "${page.displayName}".padStart(length, '0') + ".$extension"
             val fileUrl = "$dirUrl/${fileName.urlEncode()}"
-            val isFound = restClient
-                .head().uri(fileUrl)
-                .retrieve()
-                .toBodilessEntity().statusCode.is2xxSuccessful
-            fileUrl.takeIf { isFound }
+            // For some reason just `restClient.head().uri(fileUrl)` gives false
+            // 404 for facsimile files with curly braces, e.g., 257{237}.jpg
+            val restClientMadeUri = restClient.head().uri("$dirUrl/{fileName}", fileName)
+            val statusCode = restClientMadeUri.retrieve().toBodilessEntity().statusCode
+            fileUrl.takeIf { statusCode.is2xxSuccessful }
                 .also {
-                    if (isFound) logger.debug("200 : $fileUrl")
-                    else logger.debug("404 : $fileUrl")
+                    logger.debug("${statusCode.value()} : $fileUrl")
                 }
         }
     }
