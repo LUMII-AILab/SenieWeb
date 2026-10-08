@@ -6,6 +6,7 @@ import lv.ailab.senie.db.repositories.PageRepository
 import lv.ailab.senie.rest.CommonFailures
 import lv.ailab.senie.rest.CommonFailures.bookNotFound
 import lv.ailab.senie.rest.FacsimileClient
+import lv.ailab.senie.utils.urlDecode
 import lv.ailab.senie.utils.urlEncode
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Controller
@@ -66,7 +67,7 @@ class BookController(
         val pages = pageRepo.findAllByBookFullSourceCode(currentBook.fullSourceCode).sortedBy { it.sortOrder }
         val hasPages = pages.any { it.sortOrder > 1 }
         val currentPage = pageParam?.let { pageLink ->
-            pages.firstOrNull { page -> page.linkName == pageLink }
+            pages.firstOrNull { page -> page.linkName == pageLink.urlDecode() }
                 ?: throw CommonFailures.pageNotFound(pageLink, currentBook.fullSourceCode)
         } ?: pages.first()
         val prevPage = pages[(pages.indexOf(currentPage) - 1).coerceAtLeast(0)]
