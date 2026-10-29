@@ -14,7 +14,8 @@
       <nav class="books" th:if="${collection} != null">
         <label for="bookSelector">Nodaļa:</label>
         <form class="nav-block" action="/goto" th:if="${prevBook} != null">
-          <input type="submit" name="source" th:value="${prevBook.fullSourceCode}">
+          <input type="hidden" name="source" th:value="${prevBook.fullSourceCode}">
+          <button th:text="|Iepriekšējā (${prevBook.fullSourceCode})|"></button>
         </form>
         <form class="books nav-block" action="/goto">
           <select id="bookSelector" name="source">
@@ -28,7 +29,8 @@
           <button type="submit">Atvērt</button>
         </form>
         <form class="nav-block" action="/goto" th:if="${nextBook} != null">
-          <input type="submit" name="source" th:value="${nextBook.fullSourceCode}"/>
+          <input type="hidden" name="source" th:value="${nextBook.fullSourceCode}"/>
+          <button th:text="|Nākamā (${nextBook.fullSourceCode})|"></button>
         </form>
       </nav>
 
