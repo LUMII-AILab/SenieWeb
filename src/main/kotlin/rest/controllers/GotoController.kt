@@ -24,8 +24,11 @@ import java.util.*
     ): RedirectView {
         val (book, page, line) = when {
             address != null -> {
-                val line = contentRepo.findByAddress(address)
-                    ?: error("Sistēmā nav rindiņas ar adresi [$address].")
+                // Removes trailing dots because bible verse addresses ending
+                // with dots confuse users and they do variants.
+                val normalizedAdress = address.trimEnd('.')
+                val line = contentRepo.findByAddress(normalizedAdress)
+                    ?: error("Sistēmā nav rindiņas ar adresi [$normalizedAdress].")
                 Triple(line.page.book, line.page.name, line)
             }
             source != null -> {
