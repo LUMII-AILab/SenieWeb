@@ -44,8 +44,16 @@ ul {
     margin: 0;
     padding-left: 0;
     li {
-        padding-top: 0.05rem;
-        padding-bottom: 0.05rem;
+        padding-top: 0.07rem;
+        padding-bottom: 0.07rem;
+        ul {
+            padding-left: 1rem;
+            font-size: 90%;
+            li {
+                padding-left: 1rem;
+                font-size: 85%;
+            }
+        }
 
     }
 }
@@ -78,7 +86,7 @@ section {
     }
 }
 
-main:not(#book, #symbols) section {
+main:not(#book, #book-fulltext, #symbols) section {
     margin-left: 7%;
     h1 {
         margin: 0 0 0 -7%;
