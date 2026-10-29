@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: page(~{::main})}">
+<main id="book-fulltext">
+  <section>
+    <h1>
+      <span th:text="${pageTitle}">Grāmata (Ab1234_CD)</span>
+      <span>
+        <a href="/books/Ab1234_BC" th:href="|/books/${currentBook.fullSourceCode}">Lapu skats</a>
+        <a href="/biblio/Ab1234_BC" th:href="|/biblio/${currentBook.fullSourceCode}">Bibliogrāfija</a>
+      </span>
+    </h1>
+    <div class="page-nav">
+      <!-- List of books (only for collections) -->
+      <nav class="books" th:if="${collection} != null">
+        <label for="bookSelector">Nodaļa:</label>
+        <form class="nav-block" action="/goto" th:if="${prevBook} != null">
+          <input type="hidden" name="fullText" th:value="${true}"/>
+          <input type="hidden" name="source" th:value="${prevBook.fullSourceCode}">
+          <button th:text="|Iepriekšējā (${prevBook.fullSourceCode})|"></button>
+        </form>
+        <form class="books nav-block" action="/goto">
+          <select id="bookSelector" name="source">
+            <option
+              th:each="book : ${books}"
+              th:value="${book.fullSourceCode}"
+              th:text="${book.displayTitle}"
+              th:selected="${book.fullSourceCode} == ${currentBook.fullSourceCode}"
+            ></option>
+          </select>
+          <input type="hidden" name="fullText" th:value="${true}"/>
+          <button type="submit">Atvērt</button>
+        </form>
+        <form class="nav-block" action="/goto" th:if="${nextBook} != null">
+          <input type="hidden" name="fullText" th:value="${true}"/>
+          <input type="hidden" name="source" th:value="${nextBook.fullSourceCode}"/>
+          <button th:text="|Nākamā (${nextBook.fullSourceCode})|"></button>
+        </form>
+      </nav>
+    </div>
+
+    <!-- Page content -->
+    <div id="pageContent" translate="no">
+      <table>
+        <tr th:each="line : ${lines}">
+          <td class="address">
+            <a
+              th:id="${line.address}"
+              th:href="|/goto?address=${line.address}"
+              th:text="${line.address}"
+            >Ab1234_BC_--_1</a>
+          </td>
+          <td>[(${line.dataHtml})]</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="page-nav">
+      <nav th:insert="~{this :: .books}"></nav>
+    </div>
+
+  </section>
+</main>
+</html>

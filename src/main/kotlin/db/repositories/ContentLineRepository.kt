@@ -10,4 +10,8 @@ interface ContentLineRepository : CrudRepository<ContentLine, Int> {
         source: String,
         pageOrders: Iterable<Int>,
     ): List<ContentLine>
+
+    fun findAllByPageBookFullSourceCodeOrderByPageSortOrderAscLineSortOrderAsc(
+        source: String,
+    ): List<ContentLine>
 }

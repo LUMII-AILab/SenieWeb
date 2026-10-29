@@ -1,5 +1,7 @@
 package lv.ailab.senie.rest.controllers
 
+import lv.ailab.senie.db.entities.Book
+import lv.ailab.senie.db.entities.Page
 import lv.ailab.senie.db.repositories.BookRepository
 import lv.ailab.senie.db.repositories.ContentLineRepository
 import lv.ailab.senie.db.repositories.PageRepository
@@ -45,23 +47,7 @@ class BookController(
         model: Model,
     ): String {
         // Book / collection
-        val currentBook = bookRepo.findByFullSourceCode(source) ?: throw bookNotFound(source)
-        val collection = currentBook.collectionCode?.let(bookRepo::findCollection)
-        model.addAttribute("pageTitle", collection?.displayTitle ?: currentBook.displayTitle)
-        if (collection != null) {
-            val books = bookRepo.findAllInCollection(currentBook.collectionCode)
-                .sortedBy { it.orderInCollection }
-            val prevBook = books[(books.indexOf(currentBook) - 1).coerceAtLeast(0)]
-                .takeUnless { it == currentBook }
-            val nextBook = books[(books.indexOf(currentBook) + 1).coerceAtMost(books.lastIndex)]
-                .takeUnless { it == currentBook }
-
-            model.addAttribute("collection", collection)
-            model.addAttribute("books", books)
-            model.addAttribute("prevBook", prevBook)
-            model.addAttribute("nextBook", nextBook)
-        }
-        model.addAttribute("currentBook", currentBook)
+        val currentBook = makeBookMenu(source, model)
 
         // Pages
         val pages = pageRepo.findAllByBookFullSourceCode(currentBook.fullSourceCode).sortedBy { it.sortOrder }
@@ -101,6 +87,53 @@ class BookController(
         model.addAttribute("facsimile", facsimile)
 
         return "book"
+    }
+
+    /**
+     * Renders the book's fulltext view.
+     */
+    @GetMapping("/books_fulltext/{code}")
+    fun bookFullText(
+        @PathVariable("code") source: String,
+        model: Model,
+    ): String {
+        // Book / collection
+        val currentBook = makeBookMenu(source, model)
+
+        // Content
+        val lines = contentRepo.findAllByPageBookFullSourceCodeOrderByPageSortOrderAscLineSortOrderAsc(currentBook.fullSourceCode)
+
+        model.addAttribute("lines", lines)
+        return "book_fulltext"
+    }
+
+    /**
+     * Fetch data for book chapter selection menu and put it the model so that
+     * it can be shown.
+     */
+    private fun makeBookMenu (
+        source: String,
+        model : Model
+    ) : Book {
+        val currentBook = bookRepo.findByFullSourceCode(source) ?: throw bookNotFound(source)
+        val collection = currentBook.collectionCode?.let(bookRepo::findCollection)
+        model.addAttribute("pageTitle", collection?.displayTitle ?: currentBook.displayTitle)
+        if (collection != null) {
+            val books = bookRepo.findAllInCollection(currentBook.collectionCode)
+                .sortedBy { it.orderInCollection }
+            val prevBook = books[(books.indexOf(currentBook) - 1).coerceAtLeast(0)]
+                .takeUnless { it == currentBook }
+            val nextBook = books[(books.indexOf(currentBook) + 1).coerceAtMost(books.lastIndex)]
+                .takeUnless { it == currentBook }
+
+            model.addAttribute("collection", collection)
+            model.addAttribute("books", books)
+            model.addAttribute("prevBook", prevBook)
+            model.addAttribute("nextBook", nextBook)
+        }
+        model.addAttribute("currentBook", currentBook)
+
+        return currentBook
     }
 
 }
