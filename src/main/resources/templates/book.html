@@ -4,7 +4,10 @@
   <section>
     <h1>
       <span th:text="${pageTitle}">Grāmata (Ab1234_CD)</span>
-      <span><a href="/biblio/Ab1234_BC" th:href="|/biblio/${currentBook.fullSourceCode}">Bibliogrāfija</a></span>
+      <span>
+        <a href="/books_fulltext/Ab1234_BC" th:href="|/books_fulltext/${currentBook.fullSourceCode}" th:if="${pages} != null">Pilnteksta skats</a>
+        <a href="/biblio/Ab1234_BC" th:href="|/biblio/${currentBook.fullSourceCode}">Bibliogrāfija</a>
+      </span>
     </h1>
     <div class="page-nav">
       <!-- List of books (only for collections) -->
