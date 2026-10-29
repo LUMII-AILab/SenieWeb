@@ -27,7 +27,7 @@ import java.util.*
                 // Removes trailing dots because bible verse addresses ending
                 // with dots confuse users and they do variants.
                 val normalizedAdress = address.trimEnd('.')
-                val line = contentRepo.findByAddress(normalizedAdress)
+                val line = contentRepo.findFirstByAddressOrderByPageSortOrderAscLineSortOrderAsc(normalizedAdress)
                     ?: error("Sistēmā nav rindiņas ar adresi [$normalizedAdress].")
                 Triple(line.page.book, line.page.name, line)
             }

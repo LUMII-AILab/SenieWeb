@@ -4,7 +4,7 @@ import lv.ailab.senie.db.entities.ContentLine
 import org.springframework.data.repository.CrudRepository
 
 interface ContentLineRepository : CrudRepository<ContentLine, Int> {
-    fun findByAddress(address: String): ContentLine?
+    fun findFirstByAddressOrderByPageSortOrderAscLineSortOrderAsc(address: String): ContentLine?
 
     fun findAllByPageBookFullSourceCodeAndPageSortOrderIn(
         source: String,
