@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
 
 interface ContentLineRepository : CrudRepository<ContentLine, Int> {
-    fun findByAddress(address: String): ContentLine?
+    fun findFirstByAddressOrderByPageSortOrderAscLineSortOrderAsc(address: String): ContentLine?
 
     fun findAllByPageBookFullSourceCodeAndPageSortOrderIn(
         source: String,
