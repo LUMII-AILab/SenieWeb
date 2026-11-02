@@ -1,7 +1,6 @@
 package lv.ailab.senie.rest.controllers
 
 import lv.ailab.senie.db.entities.Book
-import lv.ailab.senie.db.entities.Page
 import lv.ailab.senie.db.repositories.BookRepository
 import lv.ailab.senie.db.repositories.ContentLineRepository
 import lv.ailab.senie.db.repositories.PageRepository
@@ -101,7 +100,7 @@ class BookController(
         val currentBook = makeBookMenu(source, model)
 
         // Content
-        val lines = contentRepo.findAllByPageBookFullSourceCodeOrderByPageSortOrderAscLineSortOrderAsc(currentBook.fullSourceCode)
+        val lines = contentRepo.findAllBySourceSortByNaturalOrder(currentBook.fullSourceCode)
 
         model.addAttribute("lines", lines)
         return "book_fulltext"
