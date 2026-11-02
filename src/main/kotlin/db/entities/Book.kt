@@ -26,7 +26,7 @@ data class Book(
     @Enumerated(EnumType.STRING)
     val indexType: IndexType?,
     val manuscript: Boolean?,
-    val orderInCollection: Int?,
+    val orderInCollection: Float?,
     @ManyToMany(fetch = LAZY)
     @JoinTable(name="books_genres",
             joinColumns= [JoinColumn(name="source", referencedColumnName=FULL_SOURCE_CODE)],
